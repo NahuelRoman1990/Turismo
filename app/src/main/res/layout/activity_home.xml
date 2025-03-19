@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -15,34 +16,26 @@
         android:background="@color/overlay_color" />
 
     <!-- Banner degradado -->
-    <View
-        android:id="@+id/banner"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@drawable/banner_gradient"
-        android:elevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
 
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="80dp" />
+        >
 
     <LinearLayout
         android:id="@+id/main_cont"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="120dp"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="16dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+        />
 
         <!-- Aquí puedes agregar más elementos visuales si es necesario -->
 
-    </LinearLayout>
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -53,5 +46,5 @@
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
         app:menu="@menu/bottom_menu" />
-
+    </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

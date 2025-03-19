@@ -15,9 +15,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_ppal"
+        android:icon="@drawable/icono_ppal"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_ppal"
+        android:roundIcon="@drawable/icono_ppal"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppChat"
         tools:targetApi="31">

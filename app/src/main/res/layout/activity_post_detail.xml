@@ -120,7 +120,7 @@ android:padding="@dimen/default_padding">
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:background="#00D2B48C"
-            app:tabIndicatorColor="@color/purple_500"
+            app:tabIndicatorColor="@color/primary"
             app:tabIndicatorHeight="4dp" />
 
         <ImageView
