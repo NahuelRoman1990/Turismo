@@ -20,7 +20,17 @@ public class RegisterActivity extends AppCompatActivity {
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         viewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
-        viewModel.getRegisterResult().observe(this, result -> showToast(result));
+
+        // Observar el resultado del registro
+        viewModel.getRegisterResult().observe(this, result -> {
+            if (result != null) {
+                showToast("Registro exitoso 🎉");
+                irAMainActivity(); // Llamar la función para cambiar de pantalla
+            } else {
+                showToast("Error en el registro, intenta nuevamente.");
+            }
+        });
+
         manejarEventos();
     }
 
@@ -37,6 +47,13 @@ public class RegisterActivity extends AppCompatActivity {
                 realizarRegistro();
             }
         });
+    }
+
+    private void irAMainActivity() {
+        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Limpia el stack
+        startActivity(intent);
+        finish(); // Cierra RegisterActivity
     }
 
     private void realizarRegistro() {
