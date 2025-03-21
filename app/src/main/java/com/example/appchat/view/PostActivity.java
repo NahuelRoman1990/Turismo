@@ -51,13 +51,6 @@ public class PostActivity extends AppCompatActivity {
         binding.btnPublicar.setOnClickListener(v -> publicarPost());
     }
 
-    private void setupRecyclerView() {
-        adapter = new ImageAdapter(imagenesUrls, this);
-        binding.recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        binding.recyclerView.setAdapter(adapter);
-        updateRecyclerViewVisibility();
-    }
-
     private void setupViewModels() {
         postViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         postViewModel.getPostSuccess().observe(this, exito -> {
@@ -90,29 +83,56 @@ public class PostActivity extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        Uri imageUri = result.getData().getData();
-                        if (imageUri != null && imagenesUrls.size() < MAX_IMAGES) {
-                            ImageUtils.subirImagenAParse(PostActivity.this, imageUri, new ImageUtils.ImageUploadCallback() {
-                                @Override
-                                public void onSuccess(String imageUrl) {
-                                   Log.d("PostActivity", "Imagen subida con éxito: " + imageUrl);
-                                    imagenesUrls.add(imageUrl);
-                                    adapter.notifyDataSetChanged();
-                                    updateRecyclerViewVisibility();
+                        Intent data = result.getData();
+                        if (data.getClipData() != null) {
+                            // Selección múltiple de imágenes
+                            int itemCount = data.getClipData().getItemCount();
+                            for (int i = 0; i < itemCount; i++) {
+                                if (imagenesUrls.size() < MAX_IMAGES) {
+                                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                                    subirImagen(imageUri);
+                                } else {
+                                    Toast.makeText(this, "Máximo de imágenes alcanzado", Toast.LENGTH_SHORT).show();
+                                    break;
                                 }
-                                @Override
-                                public void onFailure(Exception e) {
-                                   Log.e("PostActivity", "Error al subir la imagen", e);
-                                    Toast.makeText(PostActivity.this, "Error al subir la imagen", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        } else if (imagenesUrls.size() >= MAX_IMAGES) {
-                            Toast.makeText(PostActivity.this, "Máximo de imágenes alcanzado", Toast.LENGTH_SHORT).show();
+                            }
+                        } else if (data.getData() != null) {
+                            // Selección de una sola imagen
+                            Uri imageUri = data.getData();
+                            if (imagenesUrls.size() < MAX_IMAGES) {
+                                subirImagen(imageUri);
+                            } else {
+                                Toast.makeText(this, "Máximo de imágenes alcanzado", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 }
         );
-        binding.uploadImage.setOnClickListener(v -> ImageUtils.pedirPermisos(PostActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_IMAGE));
+
+        binding.uploadImage.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Permitir selección múltiple
+            galleryLauncher.launch(intent);
+        });
+    }
+
+    private void subirImagen(Uri imageUri) {
+        ImageUtils.subirImagenAParse(PostActivity.this, imageUri, new ImageUtils.ImageUploadCallback() {
+            @Override
+            public void onSuccess(String imageUrl) {
+                Log.d("PostActivity", "Imagen subida con éxito: " + imageUrl);
+                imagenesUrls.add(imageUrl);
+                adapter.notifyDataSetChanged();
+                updateRecyclerViewVisibility();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("PostActivity", "Error al subir la imagen", e);
+                Toast.makeText(PostActivity.this, "Error al subir la imagen", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void publicarPost() {
@@ -176,4 +196,21 @@ public class PostActivity extends AppCompatActivity {
             Toast.makeText(this, "Permiso denegado", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void setupRecyclerView() {
+        adapter = new ImageAdapter(imagenesUrls, this, new ImageAdapter.OnImageRemoveListener() {
+            @Override
+            public void onImageRemove(int position) {
+
+                imagenesUrls.remove(position);
+                adapter.notifyDataSetChanged();
+                updateRecyclerViewVisibility();
+            }
+        });
+        binding.recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        binding.recyclerView.setAdapter(adapter);
+        updateRecyclerViewVisibility();
+    }
+
+
 }

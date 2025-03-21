@@ -27,6 +27,7 @@
     <string name="err_pass1">La contraseña debe tener al menos 6 caracteres</string>
     <string name="err_pass2">Las contraseñas no coinciden</string>
     <string name="cargando">Cargando datos...</string>
+    <string name="remove_image">Eliminar imagen</string>
     <string-array name="categorias_array">
         <item>Naturaleza</item>
         <item>Montaña</item>
