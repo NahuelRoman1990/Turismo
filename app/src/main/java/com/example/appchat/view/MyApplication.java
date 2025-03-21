@@ -4,6 +4,7 @@ import android.app.Application;
 
 
 import com.example.appchat.model.Comentario;
+import com.example.appchat.model.Message;
 import com.example.appchat.model.Post;
 import com.example.appchat.model.User;
 import com.parse.Parse;
@@ -17,6 +18,7 @@ public class MyApplication extends Application {
         super.onCreate();
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
+        ParseObject.registerSubclass(Message.class);
         ParseObject.registerSubclass(Post.class);
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(Comentario.class);
