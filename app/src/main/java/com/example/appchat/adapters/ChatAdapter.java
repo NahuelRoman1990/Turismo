@@ -59,9 +59,26 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         }
 
         public void bind(Message message) {
-            tvContent.setText(message.getContent());
-            tvSender.setText(message.getSender().getUsername());
-            tvTimestamp.setText(message.getTimestamp());
+            // Verifica si el contenido no es null
+            if (message.getContent() != null) {
+                tvContent.setText(message.getContent());
+            } else {
+                tvContent.setText("Mensaje no disponible");
+            }
+
+            // Verifica si el sender no es null
+            if (message.getSender() != null) {
+                tvSender.setText(message.getSender().getUsername());
+            } else {
+                tvSender.setText("Usuario desconocido");
+            }
+
+            // Verifica si el timestamp no es null
+            if (message.getTimestamp() != null) {
+                tvTimestamp.setText(message.getTimestamp());
+            } else {
+                tvTimestamp.setText("Hora no disponible");
+            }
         }
     }
 }

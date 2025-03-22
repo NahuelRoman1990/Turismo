@@ -45,6 +45,16 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp">
+                <ImageView
+                    android:id="@+id/backMain"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_close"
+                    android:tint="@color/primary"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

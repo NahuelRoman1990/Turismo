@@ -1,4 +1,5 @@
 package com.example.appchat.view;
+
 import com.example.appchat.R;
 import com.example.appchat.adapters.ImageAdapter;
 import com.example.appchat.databinding.ActivityPostBinding;
@@ -44,6 +45,16 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityPostBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Configurar el OnClickListener para el ImageView backMain
+        binding.backMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Cierra la actividad actual y regresa a la anterior
+                finish();
+            }
+        });
+
         setupRecyclerView();
         setupViewModels();
         setupCategorySpinner();
@@ -77,6 +88,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
     }
+
     @SuppressLint("NotifyDataSetChanged")
     private void setupGalleryLauncher() {
         galleryLauncher = registerForActivityResult(
@@ -141,7 +153,6 @@ public class PostActivity extends AppCompatActivity {
         String duracionStr = binding.etDuracion.getText().toString().trim();
         String presupuestoStr = binding.etPresupuesto.getText().toString().trim();
 
-
         if (!Validaciones.validarTexto(titulo)) {
             binding.itTitulo.setError("El título no es válido");
             return;
@@ -201,7 +212,6 @@ public class PostActivity extends AppCompatActivity {
         adapter = new ImageAdapter(imagenesUrls, this, new ImageAdapter.OnImageRemoveListener() {
             @Override
             public void onImageRemove(int position) {
-
                 imagenesUrls.remove(position);
                 adapter.notifyDataSetChanged();
                 updateRecyclerViewVisibility();
@@ -211,6 +221,4 @@ public class PostActivity extends AppCompatActivity {
         binding.recyclerView.setAdapter(adapter);
         updateRecyclerViewVisibility();
     }
-
-
 }
