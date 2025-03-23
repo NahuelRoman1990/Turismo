@@ -44,34 +44,31 @@ public class RegisterViewModel extends ViewModel {
     }
 
     private void configureUserACL(String userId) {
-        // Obtener el usuario recién registrado
-        ParseUser user = ParseUser.createWithoutData(ParseUser.class, userId);
+        ParseUser user = ParseUser.getCurrentUser(); // Obtén el usuario actual (recién registrado)
 
-        // Crear un nuevo ACL
-        ParseACL acl = new ParseACL();
+        if (user != null) {
+            ParseACL acl = new ParseACL();
+            acl.setReadAccess(user, true); // El usuario puede leer
+            acl.setWriteAccess(user, true); // El usuario puede escribir
+            acl.setPublicReadAccess(true); // Lectura pública
 
-        // Permitir que el usuario tenga control total (lectura y escritura)
-        acl.setReadAccess(user, true); // El usuario puede leer
-        acl.setWriteAccess(user, true); // El usuario puede escribir
+            user.setACL(acl);
 
-        // Permitir que cualquier usuario tenga acceso de lectura
-        acl.setPublicReadAccess(true); // Lectura pública
-
-        // Asignar el ACL al usuario
-        user.setACL(acl);
-
-        // Guardar los cambios en Parse
-        user.saveInBackground(e -> {
-            if (e == null) {
-                // ACL configurado correctamente
-                registerResult.setValue(userId);
-                Log.d("RegisterViewModel", "ACL configurado correctamente para el usuario: " + userId);
-            } else {
-                // Error al configurar el ACL
-                registerResult.setValue(null);
-                Log.e("RegisterViewModel", "Error al configurar ACL: ", e);
-            }
-        });
+            user.saveInBackground(e -> {
+                if (e == null) {
+                    // ACL configurado correctamente
+                    registerResult.setValue(userId);
+                    Log.d("RegisterViewModel", "ACL configurado correctamente para el usuario: " + userId);
+                } else {
+                    // Error al configurar ACL
+                    registerResult.setValue(null);
+                    Log.e("RegisterViewModel", "Error al configurar ACL: " + e.getMessage(), e);
+                }
+            });
+        } else {
+            Log.e("RegisterViewModel", "El usuario actual es nulo.");
+            registerResult.setValue(null);
+        }
     }
 }
 

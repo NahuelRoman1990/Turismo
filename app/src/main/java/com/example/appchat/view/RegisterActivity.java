@@ -10,6 +10,8 @@ import com.example.appchat.databinding.ActivityRegisterBinding;
 import com.example.appchat.model.User;
 import com.example.appchat.util.Validaciones;
 import com.example.appchat.viewmodel.RegisterViewModel;
+import com.parse.ParseUser;
+
 public class RegisterActivity extends AppCompatActivity {
     private ActivityRegisterBinding binding;
     private RegisterViewModel viewModel;
@@ -61,6 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
         String email = binding.itEmail.getText().toString().trim();
         String pass = binding.itPassword.getText().toString().trim();
         String pass1 = binding.itPassword1.getText().toString().trim();
+
         // Validaciones de entrada
         if (!Validaciones.validarTexto(usuario)) {
             showToast("Usuario incorrecto");
@@ -76,12 +79,23 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        User user = new User();
-        user.setEmail(email);
-        user.setUsername(usuario);
-        user.setPassword(pass);
-        Log.d("RegisterActivity", "Usuario registrado: " + usuario + ", Email: " + email+" pass: "+pass);
-        viewModel.register(user);
+        // Cerrar sesión antes de registrar un nuevo usuario
+        ParseUser.logOutInBackground(e -> {
+            if (e == null) {
+                // Sesión cerrada correctamente, procede con el registro
+                User user = new User();
+                user.setEmail(email);
+                user.setUsername(usuario);
+                user.setPassword(pass);
+
+                Log.d("RegisterActivity", "Usuario registrado: " + usuario + ", Email: " + email + ", Pass: " + pass);
+                viewModel.register(user);
+            } else {
+                // Error al cerrar sesión
+                Log.e("RegisterActivity", "Error al cerrar sesión: ", e);
+                showToast("Error al cerrar sesión. Intenta nuevamente.");
+            }
+        });
     }
 
     private void showToast(String message) {

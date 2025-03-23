@@ -5,7 +5,6 @@ import com.example.appchat.adapters.ImageAdapter;
 import com.example.appchat.databinding.ActivityPostBinding;
 import com.example.appchat.util.ImageUtils;
 import com.example.appchat.viewmodel.PostViewModel;
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
